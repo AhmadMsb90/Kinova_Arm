@@ -1,0 +1,93 @@
+repositories:
+  angles:
+    type: git
+    url: https://github.com/ros/angles.git
+    version: a96224f9ab3ac51fe8fd981c1e1554528dc4345a
+  backward_ros:
+    type: git
+    url: https://github.com/pal-robotics/backward_ros.git
+    version: 3c71c9f184223f885459ad67a223eb36a5ca347f
+  control_msgs:
+    type: git
+    url: https://github.com/ros-controls/control_msgs.git
+    version: a0563b45404db14c7e57b867fa2c2a96f1556963
+  control_toolbox:
+    type: git
+    url: https://github.com/ros-controls/control_toolbox.git
+    version: 03115109c457c470463c6462cc6d945eab011402
+  diagnostics:
+    type: git
+    url: https://github.com/ros/diagnostics.git
+    version: 81b53fad4dfdd5169d7db4aa77b60602e4b46d86
+  filters:
+    type: git
+    url: https://github.com/ros/filters.git
+    version: ef8bad440cb65a54874dbaa8bf39b3acc2c03268
+  generate_parameter_library:
+    type: git
+    url: https://github.com/PickNikRobotics/generate_parameter_library.git
+    version: ba76355828a0654fcfa30bb2a74bdd38e0ca25db
+  gz_ros2_control:
+    type: git
+    url: https://github.com/ros-controls/gz_ros2_control.git
+    version: 5f330a08a4c88063e480a3bdc1459f3f75c56a46
+  joint_state_publisher:
+    type: git
+    url: https://github.com/ros/joint_state_publisher.git
+    version: 68986c7b1a2ced650213d24a3a6487a472fcd8d1
+  moveit2:
+    type: git
+    url: https://github.com/moveit/moveit2.git
+    version: 4d841063574c31a21f69ae12a39fddb77a7eb984
+  moveit_msgs:
+    type: git
+    url: https://github.com/moveit/moveit_msgs.git
+    version: 8daca8c56914e9cb8bd31d3332e71dd93dde5cc6
+  moveit_resources:
+    type: git
+    url: https://github.com/moveit/moveit_resources.git
+    version: c55b102711fc0aebe80c6952d2ce97c38110abba
+  picknik_controllers:
+    type: git
+    url: https://github.com/picknikrobotics/picknik_controllers.git
+    version: 1c7cc82c7bcfb1692943308eedc225292d54a33c
+  realtime_tools:
+    type: git
+    url: https://github.com/ros-controls/realtime_tools.git
+    version: fa273d826675f55cb72936f271f22b7ce2eab89b
+  ros2_control:
+    type: git
+    url: https://github.com/ros-controls/ros2_control.git
+    version: 2db79031a5464b0a3737d2c4de7f68c64ee93ef4
+  ros2_control_cmake:
+    type: git
+    url: https://github.com/ros-controls/ros2_control_cmake.git
+    version: 3379ea288484cfab97215d3597b26ba0b810b289
+  ros2_controllers:
+    type: git
+    url: https://github.com/ros-controls/ros2_controllers.git
+    version: 18151de5901aba39d12bdd58c0fc067b2575c790
+  ros2_kortex:
+    type: git
+    url: https://github.com/Kinovarobotics/ros2_kortex.git
+    version: 25d1726f6bc4dc163e3501a52c5383f3ae245408
+  ros2_robotiq_gripper:
+    type: git
+    url: https://github.com/picknikrobotics/ros2_robotiq_gripper.git
+    version: 3b6cf8ff9106384e72c23de7d3ba989fb6b41141
+  ros_gz:
+    type: git
+    url: https://github.com/gazebosim/ros_gz.git
+    version: f84c00e779929b1a354591b5b0e35bdc574eacda
+  rsl:
+    type: git
+    url: https://github.com/PickNikRobotics/rsl.git
+    version: b127ab167a0f663e4a7f810a6466493641af2485
+  serial:
+    type: git
+    url: https://github.com/tylerjw/serial.git
+    version: d8d160678aa0b31cdf467c052b954fa287cc6cdf
+  xacro:
+    type: git
+    url: https://github.com/ros/xacro.git
+    version: da4b3849f8320903d625250089f67f0632be86f2

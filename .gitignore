@@ -1,0 +1,35 @@
+# --- ROS 2 / Colcon generated directories ---
+/build/
+/install/
+/log/
+/lor/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# --- C++ / CMake ---
+CMakeCache.txt
+CMakeFiles/
+*.cmake
+*.o
+*.so
+*.a
+.ninja_*
+
+# --- IDEs and Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.settings/
+.cproject
+
+# --- OS generated files ---
+.DS_Store
+Thumbs.db
