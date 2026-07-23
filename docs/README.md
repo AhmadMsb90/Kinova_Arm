@@ -1,33 +1,30 @@
-# Kinova ROS 2 Jazzy Integration & Simulation
+# Kinova Gen3 ROS 2 Jazzy Documentation
 
-Welcome to the official repository for running and managing Kinova robot arms using ROS 2 Jazzy. This repository contains the configuration, workspace setups, and deployment tools required for simulation and hardware control.
+This directory contains the setup guides, build fixes, and verification procedures for the Kinova Gen3 (7DOF) manipulator using ROS 2 Jazzy, MoveIt, and ros2_control.
 
----
 
-## Quick Navigation
+## Documentation Index
 
-* **[Installation & Setup](#documentation)**: Get your environment and workspace up and running.
-* **[Usage](#usage)**: Quick commands to launch simulations and nodes *(Coming Soon)*.
-* **[Architecture](#architecture)**: High-level overview of the packages used *(Coming Soon)*.
+Follow these guides in sequential order to set up the environment and verify system functionality:
 
----
+### 1. [Docker Image & Workspace Setup](docker-kinova-setup.md)
+* **Environment:** Ubuntu 24.04 and ROS 2 Jazzy Desktop inside Docker with GPU/GUI forwarding.
+* **Source Builds:** Compilation logs for ros2_kortex, moveit2, and ros2_control.
+* **Critical Bug Fixes:** Resolution for the parameter_traits header path mismatch and moveit_ros_tests CMake build failures.
 
-## Documentation
+### 2. [Simulation & MoveIt Verification](simulation_and_moveit_verification.md)
+* **Bringup:** Initializing the Kinova Gen3 fake hardware simulation pipeline.
+* **Health Checks:** Monitoring active ros2_control states and verifying data flow on /joint_states.
+* **Motion Planning:** Validation of collision-free trajectories and home positioning using RViz and MoveIt.
 
-Comprehensive guides for setting up, configuring, and running the project are organized within the `docs/` directory. As the project evolves, additional guides will be added here.
 
-### Environment & Workspace Setup
-* **[Docker Image & Kinova Workspace Setup](docs/docker-kinova-setup.md)**  
-  Detailed instructions on building the Ubuntu 24.04 / ROS 2 Jazzy Docker container, resolving dependency paths, configuring MoveIt, and compiling the Kinova workspace from source.
 
-*(Future documentation modules—such as simulation launches, hardware bringup, and controller tuning—will be indexed here as they are added.)*
 
----
-
-## Project Structure
+## Repository Directory Structure
 
 ```text
-├── docs/
-│   └── docker-kinova-setup.md    # Docker & Kinova workspace build guide
-├── README.md                     # Main repository documentation
-└── ...                           # Workspace source packages (added via setup)
+docs/
+├── README.md                              # This documentation index
+├── docker-kinova-setup.md                 # Environment creation & workspace compilation guide
+└── simulation_and_moveit_verification.md  # Simulation testing and execution guide
+```

@@ -478,3 +478,5 @@ source ~/kinova_ws/install/setup.bash
 ```
 
 and proceed with the Kinova simulation launch tests.
+
+

@@ -1,35 +1,49 @@
-# --- ROS 2 / Colcon generated directories ---
-/build/
-/install/
-/log/
-/lor/
+# ===============================
+# ROS 2 / Colcon
+# ===============================
+build/
+install/
+log/
+logs/
+.colcon/
 
-# --- Python ---
+# ===============================
+# Generated package files
+# ===============================
+compile_commands.json
+.colcon_install_layout
+
+# ===============================
+# Python
+# ===============================
 __pycache__/
 *.py[cod]
-*$py.class
 *.egg-info/
 dist/
-build/
 
-# --- C++ / CMake ---
+# ===============================
+# CMake / C++
+# ===============================
 CMakeCache.txt
 CMakeFiles/
-*.cmake
+cmake_install.cmake
+Makefile
 *.o
-*.so
+*.obj
 *.a
-.ninja_*
+*.so
+*.dylib
 
-# --- IDEs and Editors ---
+# ===============================
+# IDEs
+# ===============================
 .vscode/
 .idea/
 *.swp
 *.swo
-.project
-.settings/
-.cproject
 
-# --- OS generated files ---
+# ===============================
+# Misc
+# ===============================
 .DS_Store
 Thumbs.db
