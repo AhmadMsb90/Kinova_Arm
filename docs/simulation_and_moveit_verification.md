@@ -16,9 +16,36 @@ ros2 launch kortex_bringup gen3.launch.py \
   use_fake_hardware:=true
 ```
 
-The robot model appears in RViz with the MoveIt visualization interface.
+The robot model appears in RViz.
 
 The `robot_ip` argument is required by the launch file even when using fake hardware.
+
+
+## Start MoveIt Motion Planning Platform
+
+Open another terminal inside the same container.
+
+Source ROS 2 and the workspace:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+source /workspaces/kinova_ws/install/setup.bash
+```
+
+Launch the Kinova Gen3 MoveIt planning interface:
+
+```bash
+ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config robot.launch.py \
+robot_ip:=127.0.0.1
+```
+
+This launches the MoveIt planning environment in RViz, including:
+
+- Motion Planning panel
+- Robot model visualization
+- Planning scene
+- Interactive end-effector markers
+- MoveIt trajectory planning interface
 
 
 ## Verify ros2_control Controllers
@@ -52,7 +79,6 @@ The active controllers confirm that:
 - Joint trajectory commands can be sent.
 - The fake hardware interface is connected.
 
----
 
 ## Verify Joint State Feedback
 
@@ -108,10 +134,23 @@ effort:
 - 0.0
 ```
 
+A message loss warning at startup can appear:
+
+```text
+A message was lost!!!
+```
+
+This is not critical if joint states continue publishing normally.
+
 
 ## MoveIt Motion Planning Test in RViz
 
-1. Open the RViz window started by the Kinova launch file.
+1. Open the RViz window started by the MoveIt launch file:
+
+```bash
+ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config robot.launch.py \
+robot_ip:=127.0.0.1
+```
 
 2. In the left panel:
 
@@ -133,12 +172,12 @@ MotionPlanning → Planning
 arm
 ```
 
-
 5. The robot end-effector interactive marker appears.
 
 6. Move the interactive marker:
-   - Drag the colored arrows/rings.
-   - Place the end-effector in a reachable target pose.
+
+- Drag the colored arrows/rings.
+- Place the end-effector in a reachable target pose.
 
 7. Click:
 
@@ -154,9 +193,8 @@ MoveIt generates a collision-free trajectory.
 Execute
 ```
 
-The simulated Kinova arm moves in RViz and the joint positions update.
+The simulated Kinova arm moves and the joint states update.
 
----
 
 ## Returning the Robot to Home Position
 
@@ -200,6 +238,7 @@ Select Goal State
 Home
 ```
 
+(if available in the loaded SRDF configuration).
 
 7. Click:
 
@@ -214,4 +253,3 @@ Execute
 ```
 
 The robot returns to the predefined home configuration.
-
