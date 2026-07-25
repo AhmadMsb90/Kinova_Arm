@@ -1,7 +1,10 @@
 #include <rclcpp/rclcpp.hpp> // ROS 2 core client library
 #include <moveit/move_group_interface/move_group_interface.hpp> // MoveIt 2 robot interface
 #include <geometry_msgs/msg/pose.hpp> // ROS 2 3D geometry pose message
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
 #include <chrono>
+
 
 using namespace std::chrono_literals;
 
@@ -18,7 +21,7 @@ public:
     {
         using moveit::planning_interface::MoveGroupInterface;
 
-        // Initialize MoveGroup for the "manipulator" group
+        // Initialize MoveGroup for the "manipulator" group 
         move_group_ = std::make_shared<MoveGroupInterface>(shared_from_this(), "manipulator");
 
         // Create a wall timer that triggers printing callback every 1 second (1Hz)
@@ -45,6 +48,32 @@ private:
         RCLCPP_INFO(this->get_logger(), "  x = %f", pose.position.x);
         RCLCPP_INFO(this->get_logger(), "  y = %f", pose.position.y);
         RCLCPP_INFO(this->get_logger(), "  z = %f", pose.position.z);
+
+
+
+        RCLCPP_INFO(this->get_logger(), "End Effector Orientation (Quaternion):");
+        RCLCPP_INFO(this->get_logger(), "  qx = %.4f", pose.orientation.x);
+        RCLCPP_INFO(this->get_logger(), "  qy = %.4f", pose.orientation.y);
+        RCLCPP_INFO(this->get_logger(), "  qz = %.4f", pose.orientation.z);
+        RCLCPP_INFO(this->get_logger(), "  qw = %.4f", pose.orientation.w);
+
+
+
+        tf2::Quaternion q(
+        pose.orientation.x,
+        pose.orientation.y,
+        pose.orientation.z,
+        pose.orientation.w);
+
+        double roll, pitch, yaw;
+
+        tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
+
+        RCLCPP_INFO(this->get_logger(), "End Effector Orientation (RPY):");
+        RCLCPP_INFO(this->get_logger(), "  Roll  = %.4f rad", roll);
+        RCLCPP_INFO(this->get_logger(), "  Pitch = %.4f rad", pitch);
+        RCLCPP_INFO(this->get_logger(), "  Yaw   = %.4f rad", yaw);
+
     }
 
     std::shared_ptr<moveit::planning_interface::MoveGroupInterface> move_group_;

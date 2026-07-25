@@ -13,6 +13,7 @@ find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(moveit_core REQUIRED)
+find_package(tf2 REQUIRED)
 
 # 2. Define the executable and its source files
 add_executable(kinematics_monitor
@@ -24,6 +25,7 @@ ament_target_dependencies(kinematics_monitor
   rclcpp
   geometry_msgs
   moveit_ros_planning_interface
+  tf2
   moveit_core
 )
 
