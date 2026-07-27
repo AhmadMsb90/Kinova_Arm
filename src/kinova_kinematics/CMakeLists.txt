@@ -20,6 +20,10 @@ add_executable(kinematics_monitor
   src/kinematics_monitor.cpp
 )
 
+add_executable(forward_kinematics
+  src/forward_kinematics.cpp
+)
+
 # 3. Link dependencies to  executable
 ament_target_dependencies(kinematics_monitor
   rclcpp
@@ -29,8 +33,19 @@ ament_target_dependencies(kinematics_monitor
   moveit_core
 )
 
+ament_target_dependencies(forward_kinematics
+  rclcpp
+  geometry_msgs
+  moveit_ros_planning_interface
+  moveit_core
+)
+
+
 # 4. Handle installation rules
-install(TARGETS kinematics_monitor
+install(TARGETS 
+kinematics_monitor
+forward_kinematics
+
   DESTINATION lib/${PROJECT_NAME}
 )
 

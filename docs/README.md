@@ -20,14 +20,21 @@ Follow these guides in sequential order to set up the environment and verify sys
 ### 3. [Kinematics Monitoring Node](kinova_kinematics_monitor.md)
 * **Node Implementation:** C++ ROS 2 node utilizing MoveIt 2 MoveGroupInterface to monitor joint space and task space[cite: 2].
 * **Forward Kinematics:** Real-time programmatic access to current joint angles and end-effector Cartesian positions ($x, y, z$)[cite: 2].
-* **Pipeline Integration:** Instructions to run alongside the simulation and MoveIt verification steps[cite: 2].
+* **Pipeline Integration:** Instructions to run alongside the simulation and MoveIt verification steps.
+
+
+### 4. [Forward Kinematics Node Implementation](forward_kinematics.md)
+* **Node Purpose:** Computes the Cartesian pose of the Kinova Gen3 end-effector directly from current robot joint positions using MoveIt robot model utilities and `RobotState`.
+* **Architecture:** Subscribes to `/joint_states`, builds/updates the internal MoveIt `RobotState`, and extracts the `bracelet_link` transform matrix ($T = [R \ p; 0 \ 1]$).
+* **Core Components:** Details on node structure, `initialize_model()`, `joint_state_callback()`, and step-by-step FK calculations.
 
 
 ## Repository Directory Structure
 
 ```bash
 docs/
-├── README.md                              # This documentation index
+├── README.md                              
 ├── docker-kinova-setup.md                 # Environment creation & workspace compilation guide
 ├── simulation_and_moveit_verification.md  # Simulation testing and execution guide
-└── kinova_kinematics_monitor.md           # Kinematics monitoring node implementation guide
+├── kinova_kinematics_monitor.md           # Kinematics monitoring node implementation guide[cite: 4]
+└── forward_kinematics.md                  # Forward kinematics node implementation details
