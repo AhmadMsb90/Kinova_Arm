@@ -5,6 +5,7 @@
 #include <moveit/robot_state/robot_state.hpp> // Include the MoveIt robot state
 #include <Eigen/Geometry> // Include the Eigen library for linear algebra
 #include <sensor_msgs/msg/joint_state.hpp> // Include the ROS 2 message type for joint states
+#include <geometry_msgs/msg/pose_stamped.hpp> // Include the ROS 2 message type for pose
 
 class ForwardKinematics : public rclcpp::Node  // Create a ROS 2 node
 {
@@ -16,10 +17,10 @@ public:
 
     void initialize_model()
     {
-        // Now shared_from_this() is completely safe to use
+
         auto robot_model_loader = std::make_shared<robot_model_loader::RobotModelLoader>(
             shared_from_this(), 
-            "robot_description"); 
+            "robot_description"); // Create a RobotModelLoader object to load the robot model from the "robot_description" parameter
 
         robot_model_ = robot_model_loader->getModel(); // Get the robot model from the robot model loader
         if (!robot_model_) {
@@ -39,6 +40,8 @@ public:
             }
         RCLCPP_INFO(this->get_logger(), "Joint model group 'manipulator' loaded successfully.");
 
+        robot_state_ = std::make_shared<moveit::core::RobotState>(robot_model_); // Create a RobotState object using the robot model
+
         joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
             "/joint_states", 10, 
             [this](const sensor_msgs::msg::JointState::SharedPtr msg) {
@@ -46,47 +49,59 @@ public:
             }
             ); // Subscribe to the joint state topic with a queue size of 10 and bind the callback function
 
+        pose_pub_ = this->create_publisher<geometry_msgs::msg::PoseStamped>(
+            "/fk_pose", 10); // Create a publisher for the end effector pose with a queue size of 10  
+
         
-        
-        // compute_fk(); // compute forward kinematics
     }
 
 
-    void compute_fk(const sensor_msgs::msg::JointState::SharedPtr msg)
+    void compute_fk() // Function to compute forward kinematics 
     {
-        // function to compute forward kinematics 
-        robot_state_ = std::make_shared<moveit::core::RobotState>(robot_model_); // Create a RobotState object using the robot model
-        robot_state_->setToDefaultValues(); // Set the robot state to default values
-        robot_state_->setVariablePositions(msg->name, msg->position); // Set the joint positions in the robot state using the received joint state message
+        
+        
         robot_state_->update(); // Update the robot state to reflect the new joint positions
-        RCLCPP_INFO(this->get_logger(), "Robot state updated with new joint positions.");
 
         const Eigen::Isometry3d &end_effector_transform = robot_state_->getGlobalLinkTransform("bracelet_link"); // Get the global transform of the end effector link
-        RCLCPP_INFO_STREAM(this->get_logger(), "End effector transform:\n" <<
-                   end_effector_transform.matrix().format(Eigen::IOFormat(Eigen::StreamPrecision, 0, ", ", "\n", "[", "]")));
+        // RCLCPP_INFO_STREAM(this->get_logger(), "End effector transform:\n" <<
+        //            end_effector_transform.matrix().format(Eigen::IOFormat(Eigen::StreamPrecision, 0, ", ", "\n", "[", "]")));
 
-        
         double x = end_effector_transform.translation().x(); // Get the x-coordinate of the end effector
         double y = end_effector_transform.translation().y(); // Get the y-coordinate of the end effector
         double z = end_effector_transform.translation().z(); // Get the z-coordinate of the end effector
         RCLCPP_INFO(this->get_logger(), "End effector position: x = %f, y = %f, z = %f", x, y, z); // Print the end effector position
 
+        geometry_msgs::msg::PoseStamped pose_msg; // Create a PoseStamped message to publish the end effector pose
+        pose_msg.header.frame_id = "base_link"; // Set the frame ID to "base_link"
+        pose_msg.header.stamp = this->now(); // Set the timestamp to the current time
+        pose_msg.pose.position.x = x; // Set the x-coordinate of the pose
+        pose_msg.pose.position.y = y; // Set the y-coordinate of the pose
+        pose_msg.pose.position.z = z; // Set the z-coordinate of the pose
+
+        pose_pub_->publish(pose_msg); // Publish the end effector pose
+        Eigen::Quaterniond quaternion(end_effector_transform.rotation()); // Convert the rotation matrix to a quaternion
+        pose_msg.pose.orientation.x = quaternion.x();
+        pose_msg.pose.orientation.y = quaternion.y();
+        pose_msg.pose.orientation.z = quaternion.z();
+        pose_msg.pose.orientation.w = quaternion.w();
+
+        pose_pub_->publish(pose_msg); // Publish the end effector pose 
     }
 
     void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg) // callback to handle incoming joint state messages
     {  
-        RCLCPP_INFO(this->get_logger(), 
-                    "Received joint state message with %zu joints.", 
-                    msg->name.size());// Print the number of joints in the message
+        
+        robot_state_->setVariablePositions(msg->name, msg->position); // Set the joint positions in the robot state using the received joint state message
 
 
-        compute_fk(msg); // Compute forward kinematics whenever a new joint state message is received
+        compute_fk(); // Compute forward kinematics whenever a new joint state message is received
     }
 
 private:
     moveit::core::RobotModelPtr robot_model_; // Pointer to the robot model  
     moveit::core::RobotStatePtr robot_state_; // Robot state object to hold the current state of the robot 
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_; // Subscription to the joint state topic
+    rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr pose_pub_; // Publisher for the end effector pose
 
 };
 
