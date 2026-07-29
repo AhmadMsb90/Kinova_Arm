@@ -83,16 +83,7 @@ robot_description
 
 This parameter is provided by the MoveIt launch system.
 
-The loading sequence is:
 
-```
-robot_description
-        |
-        v
-RobotModelLoader
-        |
-        v
-RobotModel
 ```
 
 The loaded model contains:
