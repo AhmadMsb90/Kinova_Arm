@@ -250,3 +250,31 @@ where:
 - `p` represents position.
 
  
+
+ 
+# Publishing the End-Effector Pose
+
+After computing the forward kinematics, the node publishes the resulting Cartesian pose.
+
+The pose is published as `/fk_pose` in the `base_link` frame using the message type `geometry_msgs/PoseStamped` and contains:
+
+- Header
+- Position (x, y, z)
+- Orientation (quaternion)
+
+
+
+# ROS Interfaces
+
+## Subscribed Topics
+
+| Topic | Message Type | Purpose |
+| :--- | :--- | :--- |
+| `/joint_states` | `sensor_msgs/JointState` | Receives the current robot joint positions |
+
+## Published Topics
+
+| Topic | Message Type | Purpose |
+| :--- | :--- | :--- |
+| `/fk_pose` | `geometry_msgs/PoseStamped` | Publishes the computed end-effector pose |
+
