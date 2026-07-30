@@ -7,7 +7,6 @@
 #include <Eigen/Geometry> // Include the Eigen library for linear algebra
 #include <sensor_msgs/msg/joint_state.hpp> // Include the ROS 2 message type for joint states
 #include <geometry_msgs/msg/pose_stamped.hpp> // Include the ROS 2 message type for pose
-// #include <geometry_msgs/msg/TransformStamped.hpp> // Include the ROS 2 message type for transform stamped
 #include <tf2_ros/transform_broadcaster.hpp> // Include the TF2 transform broadcaster
 
 
@@ -69,7 +68,7 @@ public:
 
     // ----- Forward Kinematics Computation -----
 
-    void compute_fk() // Function to compute forward kinematics 
+    void compute_fk() // Method to compute forward kinematics 
     {
         
         

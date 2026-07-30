@@ -24,6 +24,10 @@ add_executable(forward_kinematics
   src/forward_kinematics.cpp
 )
 
+add_executable(inverse_kinematics
+  src/inverse_kinematics.cpp
+)
+
 # 3. Link dependencies to  executable
 ament_target_dependencies(kinematics_monitor
   rclcpp
@@ -37,6 +41,15 @@ ament_target_dependencies(forward_kinematics
   rclcpp
   geometry_msgs
   moveit_ros_planning_interface
+  tf2
+  moveit_core
+)
+
+ament_target_dependencies(inverse_kinematics
+  rclcpp
+  geometry_msgs
+  moveit_ros_planning_interface
+  tf2
   moveit_core
 )
 
@@ -45,6 +58,7 @@ ament_target_dependencies(forward_kinematics
 install(TARGETS 
 kinematics_monitor
 forward_kinematics
+inverse_kinematics
 
   DESTINATION lib/${PROJECT_NAME}
 )
