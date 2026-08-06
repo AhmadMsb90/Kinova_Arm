@@ -89,7 +89,6 @@ public:
         pose_msg.pose.position.y = y; // Set the y-coordinate of the pose
         pose_msg.pose.position.z = z; // Set the z-coordinate of the pose
 
-        pose_pub_->publish(pose_msg); // Publish the end effector pose
         Eigen::Quaterniond quaternion(end_effector_transform.rotation()); // Convert the rotation matrix to a quaternion
         pose_msg.pose.orientation.x = quaternion.x();
         pose_msg.pose.orientation.y = quaternion.y();

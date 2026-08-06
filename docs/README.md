@@ -18,8 +18,8 @@ Follow these guides in sequential order to set up the environment and verify sys
 * **Motion Planning:** Validation of collision-free trajectories and home positioning using RViz and MoveIt.
 
 ### 3. [Kinematics Monitoring Node](kinova_kinematics_monitor.md)
-* **Node Implementation:** C++ ROS 2 node utilizing MoveIt 2 MoveGroupInterface to monitor joint space and task space[cite: 2].
-* **Forward Kinematics:** Real-time programmatic access to current joint angles and end-effector Cartesian positions ($x, y, z$)[cite: 2].
+* **Node Implementation:** C++ ROS 2 node utilizing MoveIt 2 MoveGroupInterface to monitor joint space and task space.
+* **Forward Kinematics:** Real-time programmatic access to current joint angles and end-effector Cartesian positions ($x, y, z$).
 * **Pipeline Integration:** Instructions to run alongside the simulation and MoveIt verification steps.
 
 
