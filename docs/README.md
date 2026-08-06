@@ -29,6 +29,12 @@ Follow these guides in sequential order to set up the environment and verify sys
 * **Core Components:** Details on node structure, `initialize_model()`, `joint_state_callback()`, and step-by-step FK calculations.
 
 
+### 5. [Inverse Kinematics Node Implementation](inverse_kinematics.md)
+* **Node Purpose:** Computes the required joint configuration of the Kinova Gen3 manipulator to reach a desired end-effector pose using MoveIt 2 inverse kinematics capabilities.
+* **Architecture:** Receives target end-effector poses, converts them into a robot kinematic representation, solves the inverse kinematics problem, and generates the corresponding joint configuration.
+* **Core Components:** Details of robot model loading, manipulator group initialization, MoveIt `RobotState` usage, inverse kinematics computation, and integration with the motion execution pipeline.
+
+
 ## Repository Directory Structure
 
 ```bash
@@ -36,5 +42,6 @@ docs/
 ├── README.md                              
 ├── docker-kinova-setup.md                 # Environment creation & workspace compilation guide
 ├── simulation_and_moveit_verification.md  # Simulation testing and execution guide
-├── kinova_kinematics_monitor.md           # Kinematics monitoring node implementation guide[cite: 4]
-└── forward_kinematics.md                  # Forward kinematics node implementation details
+├── kinova_kinematics_monitor.md           # Kinematics monitoring node implementation guide
+├── forward_kinematics.md                  # Forward kinematics node implementation details
+└── inverse_kinematics.md                  # Inverse kinematics node implementation, target pose handling, IK solving, and trajectory publishing
