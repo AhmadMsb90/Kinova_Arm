@@ -21,10 +21,6 @@ public:
     InverseKinematics() : Node("inverse_kinematics") // Initialize the node 
     {
         RCLCPP_INFO(this->get_logger(), "Inverse Kinematics initialized.");
-
-        timer_ = this->create_wall_timer(
-            1s,
-            std::bind(&InverseKinematics::execute_trajectory, this)); // Create a timer to periodically call the compute_ik method
     }
 
     // ----- Robot Model Initialization -----
@@ -86,52 +82,47 @@ public:
     void compute_ik() // Method to compute inverse kinematics
     {
     
-        // Eigen::Isometry3d target_pose = Eigen::Isometry3d::Identity(); // Initialize the target pose as an identity transformation
 
-        // target_pose.translation().x() = 0.5; // Set the x-coordinate of the target pose
-        // target_pose.translation().y() = 0.0; // Set the y-coordinate of the target pose
-        // target_pose.translation().z() = 0.5; // Set the z-coordinate of the target pose
-        // target_pose.linear() = Eigen::Matrix3d::Identity(); // Set the orientation of the target pose to identity
+        bool success = robot_state_->setFromIK(joint_model_group_, target_pose_, "bracelet_link", 0.1); // Compute the inverse kinematics
 
-
-        // bool success = robot_state_->setFromIK(joint_model_group_, target_pose_, "bracelet_link", 0.1); // Compute the inverse kinematics
-
-        // if (success) 
-        // {
-        //     RCLCPP_INFO(this->get_logger(), "Inverse kinematics computation succeeded!");
-        // } 
-        // else 
-        // {
-        //     RCLCPP_ERROR(this->get_logger(), "Inverse kinematics computation failed!");
-        // }
+        if (success) 
+        {
+            RCLCPP_INFO(this->get_logger(), "Inverse kinematics computation succeeded!");
+        } 
+        else 
+        {
+            RCLCPP_ERROR(this->get_logger(), "Inverse kinematics computation failed!");
+            return;
+        }
 
         std::vector<double> joint_positions; // Vector to hold the joint positions
         robot_state_->copyJointGroupPositions(joint_model_group_, joint_positions); // Copy the joint positions from the robot state to the vector
-        std::vector<double> velocities(joint_positions.size(), 0.0); // Vector of zeros for the velocities 
-        robot_state_->copyJointGroupVelocities(joint_model_group_, velocities); // Copy the joint velocities from the robot state to the vector
         
         for (std::size_t i = 0; i < joint_positions.size(); ++i) 
         {
             RCLCPP_INFO(this->get_logger(), 
-                        "Joint %zu | Position: %f | Velocity: %f", 
-                        i + 1, joint_positions[i], velocities[i]); 
+                        "Joint %zu | Position: %f", 
+                        i + 1, joint_positions[i]); 
         }
 
         joint_trajectory_msg_.header.stamp = this->now(); // Set the timestamp of the joint trajectory message
         joint_trajectory_msg_.header.frame_id = "base_link"; // Set the frame ID of the joint trajectory message
         joint_trajectory_msg_.joint_names = joint_model_group_->getVariableNames(); // Set the joint names of the joint trajectory message
+        joint_trajectory_msg_.points.clear();
         joint_trajectory_msg_.points.resize(1); // Resize the points vector to hold one point
         joint_trajectory_msg_.points[0].positions = joint_positions; // Set the positions of the first point to the computed joint positions
-        joint_trajectory_msg_.points[0].velocities = velocities; // Set the velocities of the first point to the zero velocities
         joint_trajectory_msg_.points[0].time_from_start = rclcpp::Duration(3, 0); // Set the time from start for the first point to 3 second
-
-
-        // joint_trajectory_pub_->publish(joint_trajectory_msg_); // Publish the joint trajectory message
 
 
     }
     void pose_callback(const geometry_msgs::msg::PoseStamped::SharedPtr msg) // Callback for pose messages
     {
+        //Receive the target pose 
+        if (!msg) {
+            RCLCPP_ERROR(this->get_logger(), "Received null pose message!");
+            return;
+        }
+
         RCLCPP_INFO(this->get_logger(), 
                     "Received target pose: Position(%f, %f, %f), Orientation(%f, %f, %f, %f)", 
                     msg->pose.position.x, 
@@ -151,24 +142,10 @@ public:
                              msg->pose.orientation.z); // Create a quaternion from the received orientation
         target_pose_.linear() = q.toRotationMatrix(); // Set the orientation of the target pose
 
-        bool success = robot_state_->setFromIK(joint_model_group_, target_pose_, "bracelet_link", 0.1); // Compute the inverse kinematics
+        compute_ik(); // Compute the inverse kinematics for the received pose
 
-        if (success) 
-        {
-            RCLCPP_INFO(this->get_logger(), "Inverse kinematics computation succeeded!");
-        } 
-        else 
-        {
-            RCLCPP_ERROR(this->get_logger(), "Inverse kinematics computation failed!");
-        }
-
-    }
-
-    void execute_trajectory() // Method to execute the computed trajectory
-    {
-        compute_ik(); // Compute the inverse kinematics
         joint_trajectory_pub_->publish(joint_trajectory_msg_); // Publish the joint trajectory message
-        RCLCPP_INFO(this->get_logger(), "Published joint trajectory message.");
+
     }
 
 
@@ -179,7 +156,6 @@ private:
     rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr joint_trajectory_pub_; 
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_; // Subscription to the EE target pose 
     trajectory_msgs::msg::JointTrajectory joint_trajectory_msg_; // The joint trajectory message
-    rclcpp::TimerBase::SharedPtr timer_;
     Eigen::Isometry3d target_pose_; // The target pose
 
 };
