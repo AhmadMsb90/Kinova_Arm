@@ -59,7 +59,7 @@ public:
 
         RCLCPP_INFO(this->get_logger(), "Robot state created successfully.");
 
-        robot_state_->setToDefaultValues(); // Set the robot state to default values
+        // robot_state_->setToDefaultValues(); // Set the robot state to default values
 
         RCLCPP_INFO(this->get_logger(), "Robot state set to default values.");
 
@@ -70,11 +70,25 @@ public:
             "/joint_trajectory_controller/joint_trajectory",
              10); // Create a publisher for joint trajectories
 
+        // joint_trajectory_pub_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+        //     "/ik_joint_solution",
+        //     10); // Create a publisher for joint trajectories 
+
+
         pose_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(
             "/target_pose",
             10,
             std::bind(&InverseKinematics::pose_callback, this, std::placeholders::_1)); // Create a subscription for target poses
+
+
     
+        joint_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
+            "/joint_states",
+            10,
+            std::bind(&InverseKinematics::joint_state_callback,
+            this,
+            std::placeholders::_1));
+            
 
     }
 
@@ -83,9 +97,10 @@ public:
     {
     
 
-        bool success = robot_state_->setFromIK(joint_model_group_, target_pose_, "bracelet_link", 0.1); // Compute the inverse kinematics
+        bool success = robot_state_->setFromIK(joint_model_group_, target_pose_, "end_effector_link", 0.1); // Compute the inverse kinematics 
+        //bracelet_link
 
-        if (success) 
+        if (success)  
         {
             RCLCPP_INFO(this->get_logger(), "Inverse kinematics computation succeeded!");
         } 
@@ -149,6 +164,28 @@ public:
     }
 
 
+    void joint_state_callback(
+    const sensor_msgs::msg::JointState::SharedPtr msg)
+    {
+        if (!robot_state_ || !joint_model_group_) {
+            return;
+        }
+
+        if (msg->name.size() != msg->position.size()) {
+            return;
+        }
+
+        for (size_t i = 0; i < msg->name.size(); ++i) {
+            if (robot_model_->hasJointModel(msg->name[i])) {
+                robot_state_->setVariablePosition(
+                    msg->name[i],
+                    msg->position[i]);
+            }
+        }
+
+        robot_state_->update();
+    }
+
 private:
     moveit::core::RobotModelPtr robot_model_; // The robot model
     moveit::core::RobotStatePtr robot_state_; // The robot state
@@ -157,6 +194,7 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr pose_sub_; // Subscription to the EE target pose 
     trajectory_msgs::msg::JointTrajectory joint_trajectory_msg_; // The joint trajectory message
     Eigen::Isometry3d target_pose_; // The target pose
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_state_sub_;
 
 };
 
