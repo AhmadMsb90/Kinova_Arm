@@ -75,7 +75,7 @@ public:
         robot_state_->update(); // Update the robot state to reflect the new joint positions
 
         const Eigen::Isometry3d &end_effector_transform = 
-                        robot_state_->getGlobalLinkTransform("bracelet_link"); // Get the global transform of the end effector link
+                        robot_state_->getGlobalLinkTransform("end_effector_link"); // Get the global transform of the end effector link
 
         double x = end_effector_transform.translation().x(); // Get the x-coordinate of the end effector
         double y = end_effector_transform.translation().y(); // Get the y-coordinate of the end effector
